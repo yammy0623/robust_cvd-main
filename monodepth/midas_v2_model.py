@@ -22,7 +22,7 @@ class MidasV2Model(DepthModel):
         super().__init__()
 
         model_file = MIDAS_WEIGHTS_PATH
-        # CPU
+        # 開GPU
         if support_cpu:
             # Allow the model to run on CPU when GPU is not available.
             self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -30,13 +30,14 @@ class MidasV2Model(DepthModel):
             # Rather raise an error when GPU is not available.
             self.device = torch.device("cuda")
 
+        # 定義Model
         self.model = MidasNet(model_file, non_negative=True)
 
         num_gpus = torch.cuda.device_count()
         if num_gpus > 1:
             self.model = torch.nn.DataParallel(self.model)
 
-        self.model.to(self.device)
+        self.model.to(self.device) # model到GPU
 
         self.norm_mean = torch.Tensor([0.485, 0.456, 0.406]).reshape(1, -1, 1, 1)
         self.norm_stdev = torch.Tensor([0.229, 0.224, 0.225]).reshape(1, -1, 1, 1)
@@ -58,7 +59,7 @@ class MidasV2Model(DepthModel):
 
         # Convert from disparity to depth
         epsilon = 0.0000001
-        depth = (epsilon + disparity).reciprocal()
+        depth = (epsilon + disparity).reciprocal() # 倒數
 
         return depth
 

@@ -220,7 +220,7 @@ class DepthFineTuner:
             os.makedirs(self.checkpoints_dir, exist_ok=True)
 
         model = get_depth_model(params.model_type)
-        self.model = model()
+        self.model = model(params)
 
         self.reference_disparity = {}
 

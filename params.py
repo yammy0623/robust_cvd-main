@@ -64,6 +64,8 @@ class Video3dParamsParser:
         # self.add_export_args()
 
         self.initialized = True
+        self.parser.add_argument('--load_ckpt', default='./res50.pth', help='Checkpoint path to load')
+        self.parser.add_argument('--backbone', default='resnext101', help='Checkpoint path to load')
 
     def add_video_args(self):
         self.parser.add_argument("--size", type=int, default=384,
@@ -188,6 +190,8 @@ class Video3dParamsParser:
         self.parser.add_argument(
             "--opt.dynamic_constraints", type=str,
             choices=["None", "Mask", "Ransac"], default="Mask")
+        
+
 
     def add_fine_tuning_args(self):
         DepthFineTuningParams.add_arguments(self.parser)

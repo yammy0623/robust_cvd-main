@@ -6,8 +6,8 @@ import torch
 import matplotlib.pyplot as plt
 import torchvision.transforms as transforms
 from monodepth.depth_model import DepthModel
-from adelai.lib.multi_depth_model_woauxi import RelDepthModel
-from adelai.lib.net_tools import load_ckpt
+from monodepth.adelai.multi_depth_model_woauxi import RelDepthModel
+from monodepth.adelai.net_tools import load_ckpt
 
 # def parse_args():
 #     parser = argparse.ArgumentParser(
@@ -39,9 +39,9 @@ from adelai.lib.net_tools import load_ckpt
 
 class AdelaiModel(DepthModel):
     
-    def __init__(self, support_cpu=False): 
+    def __init__(self, params, support_cpu=False): 
         super().__init__() # DepthModel 包含forward
-        args = self.parse_args()
+        args = params
 
         # 開GPU
         if support_cpu:
@@ -62,14 +62,14 @@ class AdelaiModel(DepthModel):
         self.norm_mean = torch.Tensor([0.485, 0.456, 0.406]).reshape(1, -1, 1, 1)
         self.norm_stdev = torch.Tensor([0.229, 0.224, 0.225]).reshape(1, -1, 1, 1)
     
-    def parse_args(self):
-        parser = argparse.ArgumentParser(
-            description='Configs for LeReS')
-        parser.add_argument('--load_ckpt', default='./res50.pth', help='Checkpoint path to load')
-        parser.add_argument('--backbone', default='resnext101', help='Checkpoint path to load')
+    # def parse_args(self,parser):
+    #     # parser = argparse.ArgumentParser(
+    #     #     description='Configs for LeReS')
+    #     parser.add_argument('--load_ckpt', default='./res50.pth', help='Checkpoint path to load')
+    #     parser.add_argument('--backbone', default='resnext101', help='Checkpoint path to load')
 
-        args = parser.parse_args()
-        return args
+    #     args = parser.parse_args()
+    #     return args
     
     def estimate_depth(self, images):
         """
