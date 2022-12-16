@@ -88,8 +88,14 @@ class AdelaiModel(DepthModel):
             self.device
         )
         output = self.model.inference(input_) # 有做 pred_depth_out = depth - depth.min() + 0.01
-        depth = cv2.resize(output, (images.shape[1], images.shape[0]))
-        return depth
+        print(output.shape) # [1,1,384,224]
+        output = output.reshape(shape[:-3] + output.shape[-2:])
+        print(input_.shape) # [1,3,384,224]
+        print(images.shape) # [1,3,384,224]
+        
+        # depth = cv2.resize(output, (images.shape[1], images.shape[0]))
+        return output
+
 
     def save(self, file_name):
         state_dict = self.model.state_dict()
